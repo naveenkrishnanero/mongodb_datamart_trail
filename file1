@@ -1,1 +1,165 @@
+#It is case sensitive 
+
+use nero; 
+#to create and use data base
+# my db name is nero
+
+
+db.dropDatabase(); 
+
+#to drop a data base
+
+#show dbs;  to show list of existing dbs
+
+db.createCollection(name,options);
+autoIndexId:true;
+
+show collections;
+
+db.collectio_name.drop();
+
+db.collectio_name.insert(document);
+
+
+to insert multiple docs;
+
+db.collection_name.insert([{doc1},{doc2}]);
+
+db.collection_name.save();
+
+db.collection_name.find/findOne().pretty();
+
+findone doesn't work well wid pretty
+
+db.collection_name.find({$and:[{"price":{$gt:2800}},{"price"{$lt:2900}}]})
+db.collection_name.find({$or:[{"price":{$gt:2800}},{"price"{$lt:2900}}]});
+db.collection_name.update(criteria,$set,{multi:true});
+db.collection_name.remove(criteria,1);
+db.collection_name.find().limit(NUMBER);
+db.collection_name.find().limit(NUMBER).skip();
+
+...find({},{key:0/1})  0 --> to hide;
+. sort() 1- ascending order{key:1};
+
+db.collection_name.ensureIndex();
+1 ascending -1 descending;
+
+db.collection_name.aggregate();
+$sum,$avg,$min,$max,($first,$last for first and last docs used after sorting);
+($push used to push results into array,$addToSet same as push widout duplicates);
+
+db.walmart.update({},{$unset:{depid:""}})
+
+db.walmart.update({},{$rename:{"name":"prodname"}})
+
+
+
+
+aggregate pipeline for data aggregation;
+--------------------------------------------------------------------
+# showing data bases
+use nero
+show collections
+
+In another terminal
+cd \Data\db
+mongoimport --db nero --type csv --headerline --file walmart.csv
+----
+come to mongo.exe terminal
+
+# my data looks like this
+> db.walmart.findOne()
+{
+        "_id" : ObjectId("590562e60573f07833328661"),
+        "ProductID" : 53,
+        "UnitPrice" : 921.9,
+        "Quantity" : 27,
+        "OrderID" : 357,
+        "order_date" : "4/13/2015",
+        "ordermode" : "Online",
+        "storeid" : 35,
+        "Types" : "B",
+        "city" : "SADDLE BROOK",
+        "states" : "NJ",
+        "zip" : 7663,
+        "name" : "Briefs",
+        "depid" : 8,
+        "depname" : "Clothing",
+        "brandname" : "Under Armour",
+        "brandid" : 1052
+}
+
+
+
+db.walmart.findOne()
+
+-- two collections 
+store and order 
+storeid
+storetype
+storecity
+storestate
+storezip
+---------
+Order:
+Orderid:
+order_date:
+order_mode:
+prodid:
+prodname:
+unitprice:
+quantity:
+depname:
+----------
+removing extra comments and renaming columns
+
+db.walmart.update({},{$unset:{"brandname":"","brandid":"","depid":""}})
+
+> db.walmart.findOne()
+{
+        "_id" : ObjectId("590562e60573f07833328661"),
+        "ProductID" : 53,
+        "UnitPrice" : 921.9,
+        "Quantity" : 27,
+        "OrderID" : 357,
+        "order_date" : "4/13/2015",
+        "ordermode" : "Online",
+        "storeid" : 35,
+        "Types" : "B",
+        "city" : "SADDLE BROOK",
+        "states" : "NJ",
+        "zip" : 7663,
+        "name" : "Briefs",
+        "depname" : "Clothing"
+}
+
+--removed those feilds from data base
+db.walmart.update({},{$rename:{"name":"prodname"}})
+
+> db.walmart.findOne()
+{
+        "_id" : ObjectId("590562e60573f07833328661"),
+        "ProductID" : 53,
+        "UnitPrice" : 921.9,
+        "Quantity" : 27,
+        "OrderID" : 357,
+        "order_date" : "4/13/2015",
+        "ordermode" : "Online",
+        "storeid" : 35,
+        "Types" : "B",
+        "city" : "SADDLE BROOK",
+        "states" : "NJ",
+        "zip" : 7663,
+        "depname" : "Clothing",
+        "prodname" : "Briefs"
+}
+>
+--Query for store collection
+db.walmart.aggregate([{$project:{"storeid":1,"Types":1,"city":1,"states":1,"zip":1}},{$group:{_id:{"storeid":"$storeid","storetype":"$Types","city":"$city","state":"$states","zip":"$zip"}}},{$out:"store"}])
+
+db.walmart.aggregate([{$project:{"storeid":1,"Types":1,"city":1,"states":1,"zip":1}},{$out:"store"}])
+
+db.walmart.aggregate([{$project:{'Types':0,'city':0,'states':0,'zip':0}},{$out:"order"}])
+
+
 
