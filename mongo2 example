@@ -73,7 +73,28 @@ db.ledger2.aggregate([{$project:{"prodid":1,"prodname":1,"cost2":{$split:["$stdc
 >
 
 #Now that our data is in requiredformat and all I combine them into a single document step by step to make it a combined doc.
+ db.sales.aggregate([{$lookup:{from:"countrygroups",localField:"country",foreignField:"country",as:"geo"}},{$out:"sales2"}])
+# I am joining country and continent in same group
 
+ db.sales2.aggregate([{$addFields:{"continent":"$geo.continent"}},{$unwind:"$continent"}])
+ # this brings continent out from geo and unwinds it to regular feild from array format
+ # storing it in sales
+ 
+  db.sales.updateMany({},{$unset:{"geo":""}})
+{ "acknowledged" : true, "matchedCount" : 681, "modifiedCount" : 681 }
+# now joining my sales and 
+db.sales.aggregate([{$lookup:{from:"ledger",localField:"product",foreignField:"prodid",as:"ledger"}},
+{$addFields:{"cost":"$ledger.cost","price":"$ledger.price","prodname":"$ledger.prodname"}},{$unwind:"$cost"},{$unwind:"$price"},{$unwind:"$prodname"},{$out:"sales2"}])
+
+
+ db.sales2.updateMany({},{$unset:{"ledger":""}})
+{ "acknowledged" : true, "matchedCount" :
+ 
+ 
+ 
+ 
+ 
+ 
 
 
 
