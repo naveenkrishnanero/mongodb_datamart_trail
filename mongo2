@@ -1,0 +1,17 @@
+# use database 
+use nero 
+# create or use existing db
+#importing data from my C:\data\db folder
+
+# in another cmd prompt
+
+mongoimport --db nero --type csv --headerline --file \data\db\sales.csv
+mongoimport --db nero --type csv --headerline --file \data\db\countrygroups.csv
+mongoimport --db nero --type csv --headerline --file \data\db\ledger.csv
+
+# faced error as identical feilds just added a new columns with unique numbers and it worked
+# I will try to remove this extra column in later phases
+
+
+
+
