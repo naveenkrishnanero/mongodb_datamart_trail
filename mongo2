@@ -12,6 +12,39 @@ mongoimport --db nero --type csv --headerline --file \data\db\ledger.csv
 # faced error as identical feilds just added a new columns with unique numbers and it worked
 # I will try to remove this extra column in later phases
 
+show collections 
+# to see collections in my database
+
+db.sales.findOne()
+# to view how my data is imported
+# similarly for other three collections
+ db.sales.findOne()
+{
+        "_id" : ObjectId("590d66f06df312170c6487ec"),
+        "custId" : 23262,
+        "name" : "Candice Levy",
+        "country" : "Congo",
+        "product" : "SUPA101",
+        "mode" : "Online",
+        "quantity" : 117,
+        "date" : "8/9/2012"
+}
+ db.ledger.findOne()
+{
+        "_id" : ObjectId("590d69e56df312170c648c9d"),
+        "id" : 1,
+        "prodid" : "PURA100",
+        "prodname" : "Pure Soft Detergent - 100ml",
+        "stdCost" : "$1.50",
+        "stdPrice" : "$3.00"
+}
+ db.countrygroups.findOne()
+{
+        "_id" : ObjectId("590d69986df312170c648bdf"),
+        "id" : 1,
+        "country" : "Bangladesh",
+        "continent" : "Asia"
+}
 
 
 
