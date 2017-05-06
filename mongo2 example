@@ -29,6 +29,10 @@ db.sales.findOne()
         "quantity" : 117,
         "date" : "8/9/2012"
 }
+ db.sales.updateMany({},{$rename:{"name":"custname"}})
+{ "acknowledged" : true, "matchedCount" : 998, "modifiedCount" : 997 }
+
+
  db.ledger.findOne()
 {
         "_id" : ObjectId("590d69e56df312170c648c9d"),
@@ -47,12 +51,15 @@ db.ledger.aggregate([{$addFields:{"stdcost2":{$concat:["zigzag","$stdCost"]},"st
 > db.ledger2.update({},{$unset:{stdCost:"",stdPrice:""}})
 WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
 db.ledger2.aggregate([{$project:{"prodid":1,"prodname":1,"cost2":{$split:["$stdcost2","zigzag$"]},"price2":{$split:["$stdPrice2","zigzag$"]}}},{$project:{"prodid":1,"prodname":1,"cost":{$arrayElemAt:["$cost2",1]},"price":{$arrayElemAt:["$price2",1]}}}])
-
-
-
-
-
-
+> db.ledger3.find().forEach(function(x){x.cost=parseInt(x.cost);x.price=parseInt(x.price);db.ledger.update({},{$set:{"cost":x.cost,"price":x.price}})})
+> db.ledger.findOne()
+{
+        "_id" : ObjectId("590d69e56df312170c648c9d"),
+        "prodid" : "PURA100",
+        "prodname" : "Pure Soft Detergent - 100ml",
+        "cost" : 8,
+        "price" : 14
+}
 
  db.countrygroups.findOne()
 {
@@ -61,6 +68,16 @@ db.ledger2.aggregate([{$project:{"prodid":1,"prodname":1,"cost2":{$split:["$stdc
         "country" : "Bangladesh",
         "continent" : "Asia"
 }
+> db.countrygroups.updateMany({},{$unset:{"id":""}})
+{ "acknowledged" : true, "matchedCount" : 185, "modifiedCount" : 184 }
+>
+
+#Now that our data is in requiredformat and all I combine them into a single document step by step to make it a combined doc.
+
+
+
+
+
 
 
 
