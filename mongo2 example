@@ -38,6 +38,22 @@ db.sales.findOne()
         "stdCost" : "$1.50",
         "stdPrice" : "$3.00"
 }
+# most of these tasks can be easily done in excel just for hands on purpose
+
+db.ledger.aggregate([{$addFields:{"stdcost2":{$concat:["zigzag","$stdCost"]},"stdPrice2":{$concat:["zigzag","$stdPrice"]}}},{$out:"ledger2"}])
+ db.ledger2.aggregate([{$project:{"stdcost":{$split:["$stdcost2","zigzag$"]}}}])
+{ "_id" : ObjectId("590d69e56df312170c648c9d"), "stdcost" : [ "", "1.50" ] }
+# now i will remove those 2columns
+> db.ledger2.update({},{$unset:{stdCost:"",stdPrice:""}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+db.ledger2.aggregate([{$project:{"prodid":1,"prodname":1,"cost2":{$split:["$stdcost2","zigzag$"]},"price2":{$split:["$stdPrice2","zigzag$"]}}},{$project:{"prodid":1,"prodname":1,"cost":{$arrayElemAt:["$cost2",1]},"price":{$arrayElemAt:["$price2",1]}}}])
+
+
+
+
+
+
+
  db.countrygroups.findOne()
 {
         "_id" : ObjectId("590d69986df312170c648bdf"),
