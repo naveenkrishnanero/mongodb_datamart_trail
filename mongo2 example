@@ -88,8 +88,57 @@ db.sales.aggregate([{$lookup:{from:"ledger",localField:"product",foreignField:"p
 
 
  db.sales2.updateMany({},{$unset:{"ledger":""}})
-{ "acknowledged" : true, "matchedCount" :
- 
+{ "acknowledged" : true, "matchedCount" : 613, "modifiedCount" : 613 }
+
+
+ db.sales2.findOne()
+{
+        "_id" : ObjectId("590d6cfb6df312170c648cc0"),
+        "custId" : 23263,
+        "country" : "Panama",
+        "product" : "DETA200",
+        "mode" : "Direct",
+        "quantity" : 73,
+        "date" : "7/6/2012",
+        "custname" : "Xerxes Smith",
+        "continent" : "Central America and the Caribbean",
+        "cost" : 3,
+        "price" : 6,
+        "prodname" : "Detafast Stain Remover - 200ml"
+}
+# my final data set
+
+> db.sales2.aggregate([{$group:{_id:"$custId","country":{$first:"$country"},"product":{$first:"$product"},"mode":{$first:"$mode"},"order_date":{$first:"$date"},"custname":{$first:"$custname"},"continent":{$first:"$continent"},"costprice":{$sum:{$multiply:["$cost","$quantity"]}},"soldprice":{$sum:{$multiply:["$quantity","$price"]}}}},{$out:"orders"}])
+> db.orders.findOne()
+{
+        "_id" : 24257,
+        "country" : "Ireland",
+        "product" : "DETA800",
+        "mode" : "Retail",
+        "order_date" : "2/4/2011",
+        "custname" : "Noelle Sargent",
+        "continent" : "Europe",
+        "costprice" : 102,
+        "soldprice" : 153
+}
+>
+# now profit can be calulated from soldprice -costprice and etc.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  
  
  
